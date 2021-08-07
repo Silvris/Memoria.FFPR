@@ -129,7 +129,7 @@ namespace Memoria.FFPR.IL2CPP
                             continue;
                         }
 
-                        String extension = _extensionResolver.GetFileExtension(assetPath);
+                        String extension = _extensionResolver.GetFileExtension(assetPath,false);
                         String type = _extensionResolver.GetAssetType(asset);
                             
                         String exportPath = assetPath + extension;

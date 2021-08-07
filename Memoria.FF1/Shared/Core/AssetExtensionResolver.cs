@@ -13,8 +13,12 @@ namespace Memoria.FFPR.Core
             _catalogJson = File.ReadAllText(Application.streamingAssetsPath + @"/aa/catalog.json");
         }
 
-        public String GetFileExtension(String assetAddress)
+        public String GetFileExtension(String assetAddress, bool IsCustom)
         {
+            if (IsCustom)
+            {
+                return ".png"; //completely wrong, but just want to see if it works
+            }
             Int32 index = _catalogJson.IndexOf(assetAddress);
             if (index < 0)
                 return String.Empty;

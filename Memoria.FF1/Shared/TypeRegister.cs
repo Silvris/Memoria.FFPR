@@ -62,9 +62,10 @@ namespace Memoria.FFPR
 
             foreach (Type type in assembly.GetTypes())
             {
+
                 if (!IsImportableType(type))
                     continue;
-
+                _log.LogError(assembly.FullName);
                 MethodInfo genericMethod = registrator.MakeGenericMethod(type);
                 genericMethod.Invoke(null, parameters);
                 count++;

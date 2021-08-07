@@ -28,11 +28,32 @@ namespace Memoria.FFPR.IL2CPP
         // Don't use other Dictionaries. It must be present in IL2CPP
         private static readonly Dictionary<Object, Object> KnownAssets = new();
         private static readonly AssetExtensionResolver ExtensionResolver = new();
+        private static List<string> importFilesText = new List<String>();
+        private static bool isRead = false;
 
         public static void Postfix(String addressName, ResourceManager __instance, Boolean __result)
         {
+            bool IsCustom = false;
+            AssetsConfiguration config = ModComponent.Instance.Config.Assets;
+            String importDirectory = config.ImportDirectory;
+            String exportDirectory = config.ExportDirectory;
+            if(!isRead)
+            {
+                isRead = true;
+                String txtPath = Path.Combine(importDirectory, "customFiles.txt");
+                string[] pathArr = File.ReadAllLines(txtPath);
+                foreach (string str in pathArr)
+                {
+                    ModComponent.Log.LogInfo($"Custom File: {str}");
+                    importFilesText.Add(str);
+                }
+            }
+
+
             if (!__result)
+            {
                 return;
+            }
             
             // Skip scenes or the game will crash
             if (addressName.StartsWith("Assets/Scenes"))
@@ -40,9 +61,8 @@ namespace Memoria.FFPR.IL2CPP
             
             try
             {
-                AssetsConfiguration config = ModComponent.Instance.Config.Assets;
-                String importDirectory = config.ImportDirectory;
-                String exportDirectory = config.ExportDirectory;
+
+
 
                 // Skip import if disabled
                 if (importDirectory == String.Empty)
@@ -58,21 +78,34 @@ namespace Memoria.FFPR.IL2CPP
                     knownAsset = KnownAssets[addressName].Pointer;
 
                 Dictionary<String, Object> dic = ResourceManager.Instance.completeAssetDic;
+                Dictionary<String, ResourceLoadTask> taskDic = ResourceManager.Instance.loadOperationDic;
                 if (!dic.ContainsKey(addressName))
+                {
                     return;
-                
+                }
+
                 Object assetObject = dic[addressName];
                 if (assetObject is null)
-                    return;
-
+                    if (importFilesText.Contains(addressName)&&!KnownAssets.ContainsKey(addressName))
+                    {
+                        IsCustom = true;
+                        ModComponent.Log.LogInfo($"Custom asset: {addressName}");
+                        dic[addressName] = new Object();//We replace the entire object later, so just make it non-null
+                        assetObject = dic[addressName];
+                    }
+                    else
+                    {
+                        return;
+                    }
                 // Skip if asset was already processed
                 if (knownAsset == assetObject.Pointer)
                     return;
                 
                 KnownAssets[addressName] = assetObject;
+                
 
                 String type = ExtensionResolver.GetAssetType(assetObject);
-                String extension = ExtensionResolver.GetFileExtension(addressName);
+                String extension = ExtensionResolver.GetFileExtension(addressName,IsCustom);
                 String fullPath = Path.Combine(importDirectory, addressName) + extension;
                 if (!File.Exists(fullPath))
                     return;
@@ -87,11 +120,20 @@ namespace Memoria.FFPR.IL2CPP
                     case "UnityEngine.RenderTexture":
                     case "UnityEngine.RuntimeAnimatorController":
                     case "UnityEngine.Shader":
+                        throw new NotSupportedException(type);
                     case "UnityEngine.Sprite":
                     {
                         if (!config.ImportTextures)
                             return;
-                        newAsset = ImportSprite(assetObject.Cast<Sprite>(), fullPath);
+                        if (IsCustom)
+                        {
+                                newAsset = ImportSprite(JsonUtility.FromJson<InjectSprite>(File.ReadAllText(importDirectory + addressName + ".sprite")), fullPath);
+                                taskDic.Remove(addressName);
+                        }
+                        else
+                        {
+                                newAsset = ImportSprite(assetObject.Cast<Sprite>(), fullPath);
+                        }
                         break;
                     }
                     case "UnityEngine.TextAsset":
@@ -156,6 +198,13 @@ namespace Memoria.FFPR.IL2CPP
             Vector2 newPivot = new Vector2(originalPivot.x * ox, originalPivot.y * oy);
 
             return Sprite.Create(texture, newRect, newPivot, asset.pixelsPerUnit);
+        }
+
+        private static Object ImportSprite(InjectSprite asset, String fullPath)
+        {
+            ModComponent.Log.LogInfo("Creating new sprite...");
+            Texture2D texture = TextureHelper.ReadTextureFromFile(fullPath);
+            return Sprite.Create(texture, asset.rect, asset.pivot, asset.pixelsPerUnit);
         }
         
         private static Object ImportBinaryAsset(String assetName, String fullPath)
