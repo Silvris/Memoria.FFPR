@@ -140,8 +140,8 @@ namespace Memoria.FFPR.IL2CPP
                                 if (File.Exists(spritePath))
                                 {
                                     ModComponent.Log.LogInfo("Using custom sprite info: "+addressName);
-                                    InjectSprite newSprite = new InjectSprite();
-                                    String jsontxt = File.ReadAllText(spritePath);
+                                    System.IO.BinaryReader br = new System.IO.BinaryReader(new System.IO.FileStream(spritePath,System.IO.FileMode.Open));
+                                    InjectSprite newSprite = new InjectSprite(br);
                                     newAsset = ImportNewSprite(newSprite, fullPath);
                                 }
                                 else
