@@ -9,6 +9,13 @@ namespace Memoria.FFPR.IL2CPP
         {
         }
 
+        public InjectSprite()
+        {
+            _rect = new Rect();
+            _pivot = new Vector2();
+            _pixelsPerUnit = 0.0F;
+        }
+
         private Rect _rect;
         private Vector2 _pivot;
         private Single _pixelsPerUnit;

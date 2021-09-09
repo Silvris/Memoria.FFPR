@@ -128,7 +128,6 @@ namespace Memoria.FFPR.IL2CPP
                             return;
                         if (IsCustom)
                         {
-                                newAsset = ImportNewSprite(JsonUtility.FromJson<InjectSprite>(File.ReadAllText(importDirectory + addressName + ".sprite")), fullPath);
 
                                 taskDic.Remove(addressName);
                                 __result = true;
@@ -143,9 +142,6 @@ namespace Memoria.FFPR.IL2CPP
                                     ModComponent.Log.LogInfo("Using custom sprite info: "+addressName);
                                     InjectSprite newSprite = new InjectSprite();
                                     String jsontxt = File.ReadAllText(spritePath);
-                                    ModComponent.Log.LogInfo(jsontxt);
-                                    ModComponent.Log.LogInfo(JsonUtility.ToJson(newSprite));
-                                    JsonUtility.FromJsonOverwrite(jsontxt, newSprite);
                                     newAsset = ImportNewSprite(newSprite, fullPath);
                                 }
                                 else
