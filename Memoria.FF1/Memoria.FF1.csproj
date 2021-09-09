@@ -15,8 +15,8 @@
     <GamePath Condition="'$(GamePath)' == ''">$([MSBuild]::GetRegistryValueFromView('$(GameRegistryPath)', 'InstallLocation', null, RegistryView.Registry32))</GamePath>
     <GamePath Condition="'$(GamePath)' == ''">$([MSBuild]::GetRegistryValueFromView('$(GameRegistryPath)', 'InstallLocation', null, RegistryView.Registry64))</GamePath>
     <GamePath Condition="'$(GamePath)' == ''">bin\FF3</GamePath>
-	<OutputPath>$(GamePath)\BepInEx\plugins\</OutputPath>
-	<DebugSymbols>true</DebugSymbols>
+    <OutputPath>$(GamePath)\BepInEx\plugins\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -103,6 +103,7 @@
     <Compile Include="Shared\Configuration\ModConfiguration.cs" />
     <Compile Include="Shared\Configuration\SpeedConfiguration.cs" />
     <Compile Include="Shared\Core\AssetExtensionResolver.cs" />
+    <Compile Include="Shared\Core\BinaryTextAsset.cs" />
     <Compile Include="Shared\Core\GameEncountersControl.cs" />
     <Compile Include="Shared\Core\GameSpeedControl.cs" />
     <Compile Include="Shared\Core\InputManager.cs" />

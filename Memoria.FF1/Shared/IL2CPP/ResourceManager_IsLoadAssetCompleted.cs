@@ -105,6 +105,7 @@ namespace Memoria.FFPR.IL2CPP
                     {
                         if (!config.ImportBinary)
                             return;
+                        ModComponent.Log.LogInfo(addressName);
                         newAsset = ImportBinaryAsset(assetObject.Cast<TextAsset>().name, fullPath);
                         break;
                     }
@@ -160,8 +161,8 @@ namespace Memoria.FFPR.IL2CPP
         
         private static Object ImportBinaryAsset(String assetName, String fullPath)
         {
-            // Il2CppStructArray<Byte> sourceBytes = Il2CppSystem.IO.File.ReadAllBytes(fullPath);
-            
+            //Il2CppStructArray<Byte> sourceBytes = Il2CppSystem.IO.File.ReadAllBytes(fullPath);
+
             // Not working
             // TextAsset result = new TextAsset(new String('a', sourceBytes.Length));
             // result.name = assetName + ".bytes";
@@ -177,8 +178,13 @@ namespace Memoria.FFPR.IL2CPP
             // TextAsset result = new TextAsset(new String(chars, 0, chars.Length)) { name = assetName + ".bytes" };
             //
             // return result;
-
-            throw new NotSupportedException();
+            
+            Il2CppStructArray<Byte> bytes = System.IO.File.ReadAllBytes(fullPath);
+            //TextAsset test = Resources.Load(fullPath).Cast<TextAsset>();
+            BinaryTextAsset result = new BinaryTextAsset() { name = assetName };
+            //ModComponent.Log.LogInfo(test.bytes.Length);
+            return result;
         }
+
     }
 }

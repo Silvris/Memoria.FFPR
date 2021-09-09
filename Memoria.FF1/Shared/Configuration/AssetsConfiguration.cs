@@ -11,7 +11,7 @@ namespace Memoria.FFPR.Configuration
         private readonly ConfigEntry<String> _exportDirectory;
         private readonly ConfigEntry<Boolean> _exportText;
         private readonly ConfigEntry<Boolean> _exportTextures;
-        // private readonly ConfigEntry<Boolean> _exportBinary; // Cannot import :/
+        private readonly ConfigEntry<Boolean> _exportBinary; // Cannot import :/
         private readonly ConfigEntry<Boolean> _exportOverwrite;
         private readonly ConfigEntry<Boolean> _exportAutoDisable;
 
@@ -19,7 +19,7 @@ namespace Memoria.FFPR.Configuration
         private readonly ConfigEntry<String> _importDirectory;
         private readonly ConfigEntry<Boolean> _importText;
         private readonly ConfigEntry<Boolean> _importTextures;
-        // private readonly ConfigEntry<Boolean> _importBinary; // Cannot import :/
+        private readonly ConfigEntry<Boolean> _importBinary; // Cannot import :/
 
         public AssetsConfiguration(ConfigFile file)
         {
@@ -36,8 +36,8 @@ namespace Memoria.FFPR.Configuration
             _exportTextures = file.Bind(Section, nameof(ExportTextures), true,
                 "Export texture resources: .png, .jpg, .tga");
             
-            // _exportBinary = file.Bind(Section, nameof(ExportBinary), true,
-            //     "Export binary resources: .bytes, etc.");
+             _exportBinary = file.Bind(Section, nameof(ExportBinary), true,
+                 "Export binary resources: .bytes, etc.");
 
             _exportOverwrite = file.Bind(Section, nameof(ExportOverwrite), false,
                 "Overwrites files that exist in the export directory. All your changes will be lost.");
@@ -58,8 +58,8 @@ namespace Memoria.FFPR.Configuration
             _importTextures = file.Bind(Section, nameof(ImportTextures), false,
                 "Import text resources: .png, .jpg, .tga");
             
-            // _importBinary = file.Bind(Section, nameof(ImportBinary), true,
-            //     "Import binary resources: .bytes, etc.");
+             _importBinary = file.Bind(Section, nameof(ImportBinary), true,
+                 "Import binary resources: .bytes, etc.");
         }
 
         public String ExportDirectory => ExportEnabled.Value
@@ -68,7 +68,7 @@ namespace Memoria.FFPR.Configuration
 
         public Boolean ExportText => _exportText.Value;
         public Boolean ExportTextures => _exportTextures.Value;
-        public Boolean ExportBinary => false; // _exportBinary.Value;
+        public Boolean ExportBinary =>  _exportBinary.Value;
         
         public Boolean ExportOverwrite => _exportOverwrite.Value;
 
@@ -80,7 +80,7 @@ namespace Memoria.FFPR.Configuration
         
         public Boolean ImportText => _importText.Value;
         public Boolean ImportTextures => _importTextures.Value;
-        public Boolean ImportBinary => false; // _importBinary.Value;
+        public Boolean ImportBinary =>  _importBinary.Value;
 
         public void DisableExport() => ExportEnabled.Value = false;
     }
