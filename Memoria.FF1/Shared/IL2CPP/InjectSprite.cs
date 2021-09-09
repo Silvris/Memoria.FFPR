@@ -9,14 +9,12 @@ namespace Memoria.FFPR.IL2CPP
         {
         }
 
-        public Rect rect;
-        public Vector2 pivot;
-        public Single pixelsPerUnit;
-        public InjectSprite()
-        {
-            rect = new Rect();
-            pivot = new Vector2();
-            pixelsPerUnit = 1;
-        }
+        private Rect _rect;
+        private Vector2 _pivot;
+        private Single _pixelsPerUnit;
+
+        public Rect rect { get => _rect; set => _rect = value; }
+        public Vector2 pivot { get => _pivot; set => _pivot = value; }
+        public Single pixelsPerUnit { get => _pixelsPerUnit; set => _pixelsPerUnit = value; }
     }
 }

@@ -100,9 +100,10 @@ namespace Memoria.FFPR.IL2CPP
                 // Skip if asset was already processed
                 if (knownAsset == assetObject.Pointer)
                     return;
-                
+
                 KnownAssets[addressName] = assetObject;
-                
+
+                ModComponent.Log.LogInfo(__instance.CheckLoadAssetCompleted(addressName));
 
                 String type = ExtensionResolver.GetAssetType(assetObject);
                 String extension = ExtensionResolver.GetFileExtension(addressName,IsCustom);
@@ -127,12 +128,31 @@ namespace Memoria.FFPR.IL2CPP
                             return;
                         if (IsCustom)
                         {
-                                newAsset = ImportSprite(JsonUtility.FromJson<InjectSprite>(File.ReadAllText(importDirectory + addressName + ".sprite")), fullPath);
+                                newAsset = ImportNewSprite(JsonUtility.FromJson<InjectSprite>(File.ReadAllText(importDirectory + addressName + ".sprite")), fullPath);
+
                                 taskDic.Remove(addressName);
+                                __result = true;
                         }
                         else
                         {
-                                newAsset = ImportSprite(assetObject.Cast<Sprite>(), fullPath);
+                                ModComponent.Log.LogInfo(importDirectory + addressName + ".sprite");
+                                String spritePath = Path.ChangeExtension(fullPath, ".sprite");
+                                ModComponent.Log.LogInfo(spritePath);
+                                if (File.Exists(spritePath))
+                                {
+                                    ModComponent.Log.LogInfo("Using custom sprite info: "+addressName);
+                                    InjectSprite newSprite = new InjectSprite();
+                                    String jsontxt = File.ReadAllText(spritePath);
+                                    ModComponent.Log.LogInfo(jsontxt);
+                                    ModComponent.Log.LogInfo(JsonUtility.ToJson(newSprite));
+                                    JsonUtility.FromJsonOverwrite(jsontxt, newSprite);
+                                    newAsset = ImportNewSprite(newSprite, fullPath);
+                                }
+                                else
+                                {
+                                    newAsset = ImportSprite(assetObject.Cast<Sprite>(), fullPath);
+                                }
+                                
                         }
                         break;
                     }
@@ -184,6 +204,7 @@ namespace Memoria.FFPR.IL2CPP
         
         private static Object ImportSprite(Sprite asset, String fullPath)
         {
+            //ModComponent.Log.LogInfo("Injecting new sprite...");
             Rect originalRect = asset.rect;
             Vector2 originalPivot = asset.pivot;
             Single originalWidth = asset.texture.width;
@@ -200,10 +221,17 @@ namespace Memoria.FFPR.IL2CPP
             return Sprite.Create(texture, newRect, newPivot, asset.pixelsPerUnit);
         }
 
-        private static Object ImportSprite(InjectSprite asset, String fullPath)
+        private static Object ImportNewSprite(InjectSprite asset, String fullPath)
         {
             ModComponent.Log.LogInfo("Creating new sprite...");
             Texture2D texture = TextureHelper.ReadTextureFromFile(fullPath);
+            ModComponent.Log.LogInfo($"Rect - W: {asset.rect.width}");
+            ModComponent.Log.LogInfo($"Rect - H: {asset.rect.height}");
+            ModComponent.Log.LogInfo($"Rect - X: {asset.rect.x}");
+            ModComponent.Log.LogInfo($"Rect - Y: {asset.rect.y}");
+            ModComponent.Log.LogInfo($"Pivot -X: {asset.pivot.x}");
+            ModComponent.Log.LogInfo($"Pivot -Y: {asset.pivot.y}");
+            ModComponent.Log.LogInfo($"Pixels per unit: {asset.pixelsPerUnit}");
             return Sprite.Create(texture, asset.rect, asset.pivot, asset.pixelsPerUnit);
         }
         
