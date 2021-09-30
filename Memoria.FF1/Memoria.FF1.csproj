@@ -110,8 +110,10 @@
     <Compile Include="Shared\Core\ModConstants.cs" />
     <Compile Include="Shared\Core\TextureHelper.cs" />
     <Compile Include="Shared\EntryPoint.cs" />
+    <Compile Include="Shared\IL2CPP\AssetInstance_CreateBank.cs" />
     <Compile Include="Shared\IL2CPP\EncounterLot_CheckEncount.cs" />
     <Compile Include="Shared\IL2CPP\ResourceExporter.cs" />
+    <Compile Include="Shared\IL2CPP\ResourceLoadTask_StartTask.cs" />
     <Compile Include="Shared\IL2CPP\ResourceManager_IsLoadAssetCompleted.cs" />
     <Compile Include="Shared\IL2CPP\ModComponent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

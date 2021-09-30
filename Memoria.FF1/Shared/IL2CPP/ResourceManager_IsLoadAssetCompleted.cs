@@ -178,12 +178,11 @@ namespace Memoria.FFPR.IL2CPP
             // TextAsset result = new TextAsset(new String(chars, 0, chars.Length)) { name = assetName + ".bytes" };
             //
             // return result;
-            
-            Il2CppStructArray<Byte> bytes = System.IO.File.ReadAllBytes(fullPath);
-            //TextAsset test = Resources.Load(fullPath).Cast<TextAsset>();
-            BinaryTextAsset result = new BinaryTextAsset() { name = assetName };
-            //ModComponent.Log.LogInfo(test.bytes.Length);
-            return result;
+
+            //byte[] bytes = System.IO.File.ReadAllBytes(fullPath);
+            //BinaryTextAsset bta = new BinaryTextAsset(bytes) { name = fullPath };
+            //return bta;
+            throw new NotImplementedException();
         }
 
     }
