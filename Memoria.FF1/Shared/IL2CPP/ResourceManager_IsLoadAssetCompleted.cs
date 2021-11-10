@@ -7,6 +7,7 @@ using Memoria.FFPR.Configuration;
 using Memoria.FFPR.Core;
 using UnhollowerBaseLib;
 using UnityEngine;
+using UnityEngine.U2D;
 using Boolean = System.Boolean;
 using Exception = System.Exception;
 using File = System.IO.File;
@@ -74,6 +75,7 @@ namespace Memoria.FFPR.IL2CPP
                 String type = ExtensionResolver.GetAssetType(assetObject);
                 String extension = ExtensionResolver.GetFileExtension(addressName);
                 String fullPath = Path.Combine(importDirectory, addressName) + extension;
+                ModComponent.Log.LogInfo($"Resource {addressName} of type: {type}");
                 if (!File.Exists(fullPath))
                     return;
                 
@@ -87,6 +89,8 @@ namespace Memoria.FFPR.IL2CPP
                     case "UnityEngine.RenderTexture":
                     case "UnityEngine.RuntimeAnimatorController":
                     case "UnityEngine.Shader":
+                        ModComponent.Log.LogInfo($"Resource {addressName} of type: {type}");
+                        throw new NotSupportedException(type);
                     case "UnityEngine.Sprite":
                     {
                         if (!config.ImportTextures)
@@ -115,6 +119,8 @@ namespace Memoria.FFPR.IL2CPP
                         newAsset = ImportTextures(fullPath);
                         break;
                     case "UnityEngine.U2D.SpriteAtlas":
+                        throw new NotSupportedException(type);
+                    default:
                         throw new NotSupportedException(type);
                 }
 
@@ -158,7 +164,13 @@ namespace Memoria.FFPR.IL2CPP
 
             return Sprite.Create(texture, newRect, newPivot, asset.pixelsPerUnit);
         }
-        
+        /*
+        private static Object ImportSpriteAtlas(String assetName, String assetTag)
+        {
+            SpriteAtlas atlas = new SpriteAtlas() { name = assetName, tag = assetTag };
+            return atlas;
+        }*/
+
         private static Object ImportBinaryAsset(String assetName, String fullPath)
         {
             //Il2CppStructArray<Byte> sourceBytes = Il2CppSystem.IO.File.ReadAllBytes(fullPath);

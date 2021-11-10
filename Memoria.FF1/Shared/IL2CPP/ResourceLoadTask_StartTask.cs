@@ -9,16 +9,16 @@ using UnityEngine;
 
 namespace Memoria.FFPR.IL2CPP
 {
-    [HarmonyPatch(typeof(ResourceLoadTask), nameof(ResourceLoadTask.StartTask))]
+    //[HarmonyPatch(typeof(AssetBundleLoadTask), nameof(AssetBundleLoadTask.GetAsset))]
     public sealed class ResourceLoadTask_StartTask : Il2CppSystem.Object
     {
         public ResourceLoadTask_StartTask(IntPtr ptr) : base(ptr)
         {
         }
 
-        public static bool Prefix(MonoBehaviour mono, ResourceLoadTask __instance)
+        public static bool Prefix(AssetBundleLoadTask __instance)
         {
-            //ModComponent.Log.LogInfo($"[ResourceLoadTask.StartTask] Loaded asset:{__instance.GetAssetName()}");
+            //ModComponent.Log.LogInfo($"[AssetBundleLoadTask.GetAsset] Retrieved asset:{__instance.GetAssetName()}");
             return true;//don't skip for testing
         }
     }
