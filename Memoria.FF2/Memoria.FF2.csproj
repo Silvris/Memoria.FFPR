@@ -15,8 +15,8 @@
     <GamePath Condition="'$(GamePath)' == ''">$([MSBuild]::GetRegistryValueFromView('$(GameRegistryPath)', 'InstallLocation', null, RegistryView.Registry32))</GamePath>
     <GamePath Condition="'$(GamePath)' == ''">$([MSBuild]::GetRegistryValueFromView('$(GameRegistryPath)', 'InstallLocation', null, RegistryView.Registry64))</GamePath>
     <GamePath Condition="'$(GamePath)' == ''">bin\FF2</GamePath>
-	<OutputPath>$(GamePath)\BepInEx\plugins\</OutputPath>
-	<DebugSymbols>true</DebugSymbols>
+    <OutputPath>$(GamePath)\BepInEx\plugins\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -95,9 +95,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="..\Memoria.FF1\Shared\**\*.cs" LinkBase="Shared">
-		<Link>Shared\%(Filename)%(Extension)</Link>
-	</Compile>
+    <Compile Include="..\Memoria.FF1\Shared\**\*.cs" LinkBase="Shared">
+      <Link>Shared\%(Filename)%(Extension)</Link>
+    </Compile>
+    <Compile Include="..\Memoria.FF1\Shared\Core\SpriteData.cs">
+      <Link>Shared\SpriteData.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

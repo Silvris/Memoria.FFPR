@@ -19,7 +19,7 @@ namespace Memoria.FFPR.Configuration
         private readonly ConfigEntry<String> _importDirectory;
         private readonly ConfigEntry<Boolean> _importText;
         private readonly ConfigEntry<Boolean> _importTextures;
-        // private readonly ConfigEntry<Boolean> _importBinary; // Cannot import :/
+        private readonly ConfigEntry<Boolean> _importBinary; // Cannot import :/
 
         public AssetsConfiguration(ConfigFile file)
         {
@@ -51,15 +51,16 @@ namespace Memoria.FFPR.Configuration
             _importDirectory = file.Bind(Section, nameof(ImportDirectory), "%StreamingAssets%",
                 $"Directory from which the supported resources will be imported.",
                 new AcceptableDirectoryPath(nameof(ImportDirectory)));
-            
+
             _importText = file.Bind(Section, nameof(ImportText), true,
                 "Import text resources: .txt, .csv, .json, etc.");
             
             _importTextures = file.Bind(Section, nameof(ImportTextures), false,
                 "Import text resources: .png, .jpg, .tga");
             
-            // _importBinary = file.Bind(Section, nameof(ImportBinary), true,
-            //     "Import binary resources: .bytes, etc.");
+             _importBinary = file.Bind(Section, nameof(ImportBinary), true,
+                 "Import binary resources: .bytes, etc.");
+
         }
 
         public String ExportDirectory => ExportEnabled.Value
@@ -80,7 +81,7 @@ namespace Memoria.FFPR.Configuration
         
         public Boolean ImportText => _importText.Value;
         public Boolean ImportTextures => _importTextures.Value;
-        public Boolean ImportBinary => false; // _importBinary.Value;
+        public Boolean ImportBinary => false; //_importBinary.Value;
 
         public void DisableExport() => ExportEnabled.Value = false;
     }

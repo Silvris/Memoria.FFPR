@@ -31,13 +31,17 @@ namespace Memoria.FFPR.IL2CPP
 
         public static void Postfix(String addressName, ResourceManager __instance, Boolean __result)
         {
+            //ModComponent.Log.LogInfo(addressName);
             if (!__result)
                 return;
             
             // Skip scenes or the game will crash
             if (addressName.StartsWith("Assets/Scenes"))
                 return;
-            
+            if(addressName == "Assets/GameAssets/AssetsPath.json")
+            {
+                ModComponent.Log.LogInfo("AssetsPath accessed!");
+            }
             try
             {
                 AssetsConfiguration config = ModComponent.Instance.Config.Assets;
@@ -73,9 +77,13 @@ namespace Memoria.FFPR.IL2CPP
 
                 String type = ExtensionResolver.GetAssetType(assetObject);
                 String extension = ExtensionResolver.GetFileExtension(addressName);
+                if(((type == "System.Byte[]") || (type == "UnityEngine.U2D.SpriteAtlas")))
+                {
+
+                }
                 String fullPath = Path.Combine(importDirectory, addressName) + extension;
-                if (!File.Exists(fullPath))
-                    return;
+                if (!File.Exists(fullPath)) return;
+
                 
                 Object newAsset = null;
                 switch (type)
@@ -105,7 +113,7 @@ namespace Memoria.FFPR.IL2CPP
                     {
                         if (!config.ImportBinary)
                             return;
-                        newAsset = ImportBinaryAsset(assetObject.Cast<TextAsset>().name, fullPath);
+                        newAsset = ImportBinaryAsset(assetObject.Cast<TextAsset>().name, Path.ChangeExtension(fullPath,null));
                         break;
                     }
                     case "UnityEngine.Texture2D":
@@ -158,18 +166,71 @@ namespace Memoria.FFPR.IL2CPP
             Single oy = newHeight / originalHeight;
             Single px = originalPivot.x / originalWidth;
             Single py = originalPivot.y / originalHeight;
-            Rect newRect = new Rect(originalRect.x * ox, originalRect.y * oy, originalRect.width * ox, originalRect.height * oy);
-            Vector2 newPivot = new Vector2(px, py);
-            //ModComponent.Log.LogInfo($"pivot: ogx:{originalPivot.x} ox:{ox} nx:{newPivot.x} ogy:{originalPivot.y} oy:{oy} ny:{newPivot.y}");
-            Sprite newSpr = Sprite.Create(texture, newRect, newPivot, asset.pixelsPerUnit, 0, SpriteMeshType.Tight, asset.border);
-            newSpr.name = asset.name;
-            return newSpr;
+            if (File.Exists(fullPath.Replace(".png", ".spriteData")))
+            {
+                Rect rect;
+                Vector2 pivot;
+                Vector4 border;
+                Single ppu;
+                SpriteData sd = new SpriteData(File.ReadAllLines(fullPath.Replace(".png", ".spriteData")),asset.name);//name doesn't really matter here, since we call on import
+                if (sd.hasRect)
+                {
+                    rect = sd.rect;
+                }
+                else
+                {
+                    rect = new Rect(originalRect.x * ox, originalRect.y * oy, originalRect.width * ox, originalRect.height * oy);
+                }
+                if (sd.hasPivot)
+                {
+                    pivot = sd.pivot;
+                }
+                else
+                {
+                    pivot = new Vector2(px, py);
+                }
+                if (sd.hasBorder)
+                {
+                    border = sd.border;
+                }
+                else
+                {
+                    border = asset.border;
+                }
+                if (sd.hasPPU)
+                {
+                    ppu = sd.pixelsPerUnit;
+                }
+                else
+                {
+                    ppu = asset.pixelsPerUnit;
+                }
+                if (sd.hasWrap)
+                {
+                    texture.wrapMode = sd.wrapMode;
+                }
+                ModComponent.Log.LogInfo(ppu);
+                Sprite newSpr = Sprite.Create(texture, rect, pivot, ppu, 0, SpriteMeshType.FullRect, border);
+                ModComponent.Log.LogInfo(newSpr.pixelsPerUnit);
+                newSpr.name = asset.name;
+                return newSpr;
+            }
+            else
+            {
+                Rect newRect = new Rect(originalRect.x * ox, originalRect.y * oy, originalRect.width * ox, originalRect.height * oy);
+                Vector2 newPivot = new Vector2(px, py);
+                //ModComponent.Log.LogInfo($"pivot: ogx:{originalPivot.x} ox:{ox} nx:{newPivot.x} ogy:{originalPivot.y} oy:{oy} ny:{newPivot.y}");
+                Sprite newSpr = Sprite.Create(texture, newRect, newPivot, asset.pixelsPerUnit, 0, SpriteMeshType.Tight, asset.border);
+                newSpr.name = asset.name;
+                return newSpr;
+            }
+
         }
         
         private static Object ImportBinaryAsset(String assetName, String fullPath)
         {
             // Il2CppStructArray<Byte> sourceBytes = Il2CppSystem.IO.File.ReadAllBytes(fullPath);
-            
+
             // Not working
             // TextAsset result = new TextAsset(new String('a', sourceBytes.Length));
             // result.name = assetName + ".bytes";
@@ -185,7 +246,9 @@ namespace Memoria.FFPR.IL2CPP
             // TextAsset result = new TextAsset(new String(chars, 0, chars.Length)) { name = assetName + ".bytes" };
             //
             // return result;
-
+            //TextAsset file = Resources.Load(fullPath).Cast<TextAsset>();
+            //file.name = assetName;
+            //return file;
             throw new NotSupportedException();
         }
     }

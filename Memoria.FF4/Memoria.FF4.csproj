@@ -98,6 +98,9 @@
     <Compile Include="..\Memoria.FF1\Shared\**\*.cs" LinkBase="Shared">
       <Link>Shared\%(Filename)%(Extension)</Link>
     </Compile>
+    <Compile Include="..\Memoria.FF1\Shared\Core\SpriteData.cs">
+      <Link>Shared\SpriteData.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

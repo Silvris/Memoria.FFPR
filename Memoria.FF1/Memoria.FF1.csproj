@@ -15,8 +15,8 @@
     <GamePath Condition="'$(GamePath)' == ''">$([MSBuild]::GetRegistryValueFromView('$(GameRegistryPath)', 'InstallLocation', null, RegistryView.Registry32))</GamePath>
     <GamePath Condition="'$(GamePath)' == ''">$([MSBuild]::GetRegistryValueFromView('$(GameRegistryPath)', 'InstallLocation', null, RegistryView.Registry64))</GamePath>
     <GamePath Condition="'$(GamePath)' == ''">bin\FF3</GamePath>
-	<OutputPath>$(GamePath)\BepInEx\plugins\</OutputPath>
-	<DebugSymbols>true</DebugSymbols>
+    <OutputPath>$(GamePath)\BepInEx\plugins\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -107,10 +107,13 @@
     <Compile Include="Shared\Core\GameSpeedControl.cs" />
     <Compile Include="Shared\Core\InputManager.cs" />
     <Compile Include="Shared\Core\ModConstants.cs" />
+    <Compile Include="Shared\Core\SpriteData.cs" />
     <Compile Include="Shared\Core\TextureHelper.cs" />
     <Compile Include="Shared\EntryPoint.cs" />
     <Compile Include="Shared\IL2CPP\EncounterLot_CheckEncount.cs" />
+    <Compile Include="Shared\IL2CPP\ResourceCreator.cs" />
     <Compile Include="Shared\IL2CPP\ResourceExporter.cs" />
+    <Compile Include="Shared\IL2CPP\ResourceManager_GetAsset.cs" />
     <Compile Include="Shared\IL2CPP\ResourceManager_IsLoadAssetCompleted.cs" />
     <Compile Include="Shared\IL2CPP\ModComponent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

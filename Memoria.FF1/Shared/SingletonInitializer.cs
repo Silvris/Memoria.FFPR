@@ -31,7 +31,7 @@ namespace Memoria.FFPR
                     GameObject.Destroy(singletonObject);
                     throw new Exception($"The object is missing the required component: {name}");
                 }
-
+                ResourceCreator resource = singletonObject.AddComponent<ResourceCreator>();
                 _log.LogInfo("In-game singleton initialized successfully.");
             }
             catch (Exception ex)
