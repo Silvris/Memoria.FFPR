@@ -23,24 +23,24 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <ItemGroup>
+<ItemGroup>
     <Reference Include="0Harmony, Version=2.4.2.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\FINAL FANTASY IV PR\BepInEx\core\0Harmony.dll</HintPath>
+      <HintPath>$(GamePath)\BepInEx\core\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp, Version=3.7.1.6, Culture=neutral, PublicKeyToken=null">
       <HintPath>$(GamePath)\BepInEx\unhollowed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="BepInEx.Core, Version=6.0.0.518, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="BepInEx.Core, Version=6.0.0.401, Culture=neutral, PublicKeyToken=null">
       <HintPath>$(GamePath)\BepInEx\core\BepInEx.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="BepInEx.IL2CPP, Version=6.0.0.518, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="BepInEx.IL2CPP, Version=6.0.0.401, Culture=neutral, PublicKeyToken=null">
       <HintPath>$(GamePath)\BepInEx\core\BepInEx.IL2CPP.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="BepInEx.Preloader.Core, Version=6.0.0.518, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="BepInEx.Preloader.Core, Version=6.0.0.401, Culture=neutral, PublicKeyToken=null">
       <HintPath>$(GamePath)\BepInEx\core\BepInEx.Preloader.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
@@ -53,7 +53,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Core" />
-    <Reference Include="UnhollowerBaseLib, Version=0.4.19.5, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="UnhollowerBaseLib, Version=0.4.15.3, Culture=neutral, PublicKeyToken=null">
       <HintPath>$(GamePath)\BepInEx\core\UnhollowerBaseLib.dll</HintPath>
       <Private>False</Private>
     </Reference>
@@ -97,15 +97,6 @@
   <ItemGroup>
     <Compile Include="..\Memoria.FF1\Shared\**\*.cs" LinkBase="Shared">
       <Link>Shared\%(Filename)%(Extension)</Link>
-    </Compile>
-    <Compile Include="..\Memoria.FF1\Shared\Core\SpriteData.cs">
-      <Link>Shared\SpriteData.cs</Link>
-    </Compile>
-    <Compile Include="..\Memoria.FF1\Shared\IL2CPP\ResourceCreator.cs">
-      <Link>Shared\ResourceCreator.cs</Link>
-    </Compile>
-    <Compile Include="..\Memoria.FF1\Shared\IL2CPP\ResourceManager_GetAsset.cs">
-      <Link>Shared\ResourceManager_GetAsset.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

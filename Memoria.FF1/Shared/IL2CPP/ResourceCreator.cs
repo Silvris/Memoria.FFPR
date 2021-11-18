@@ -7,12 +7,14 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using Memoria.FFPR.Core;
+using Il2CppSystem.Asset;
 
 namespace Memoria.FFPR.IL2CPP
 {
     public sealed class ResourceCreator : MonoBehaviour
     {
         public static ResourceManager resourceManager { get; private set; }
+        public static Dictionary<string, Dictionary<string, string>> pathMatch { get; private set; }
         public static string ImportDirectory { get; set; }
         public static Dictionary<String, Dictionary<String, String>> OurFiles { get; set; }
         private bool isDisabled = false;
@@ -48,6 +50,11 @@ namespace Memoria.FFPR.IL2CPP
                 resourceManager = ResourceManager.Instance;
                 if (resourceManager is null)
                     return;
+            }
+            if(pathMatch is null)
+            {
+                pathMatch = AssetBundlePathMatch.Instance.originalData;
+                if (pathMatch is null) return;
             }
             else
             {
@@ -118,12 +125,21 @@ namespace Memoria.FFPR.IL2CPP
         }
         public void AddFiles()
         {
-            String[] groups = Directory.GetDirectories(ImportDirectory + "\\CustomFiles");
+            String[] groups;
+            try
+            {
+                groups = Directory.GetDirectories(ImportDirectory + "\\CustomFiles");
+            }
+            catch(Exception ex)
+            {
+                ModComponent.Log.LogError($"[ResourceCreator.AddFiles]: {ex}");
+                return;
+            }
             List<string> keys = new List<string>();
             int iterator = 0;
             foreach(String group in groups)
             {
-                ModComponent.Log.LogInfo(group + "/keys.json");
+                //ModComponent.Log.LogInfo(group + "/keys.json");
                 if(File.Exists(group + "/keys.json"))
                 {
                     keys.Add(File.ReadAllText(group + "/keys.json"));
@@ -145,7 +161,7 @@ namespace Memoria.FFPR.IL2CPP
                 iterator++;
             }
             assetsPathtxt += "]}";
-            ModComponent.Log.LogInfo(assetsPathtxt);
+            //ModComponent.Log.LogInfo(assetsPathtxt);
             OurFiles = AssetPathUtilty.Parse(assetsPathtxt);
             if(OurFiles != null)
             {
@@ -178,6 +194,7 @@ namespace Memoria.FFPR.IL2CPP
                             }
                         }
                     }
+                    pathMatch.Add(group.key, group.value);
                 }
             }
         }
